@@ -8,8 +8,11 @@ const Stack = createNativeStackNavigator();
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
+import { getAuth } from "firebase/auth";
+
 // import the screens
 import ShoppingLists from "./components/ShoppingLists";
+import Welcome from "./components/Welcome";
 
 const App = () => {
 
@@ -26,17 +29,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
-const db = getFirestore(app);
-  
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="ShoppingLists"
+        initialRouteName="Welcome"
       >
+        <Stack.Screen name="Welcome"
+          children={props => <Welcome auth={auth} {...props} />}
+        />
         <Stack.Screen
           name="ShoppingLists"
           children={props => <ShoppingLists db={db} {...props} />}
-/>
+        />
 {/*           {props => <ShoppingLists db={db} {...props} />}
         </Stack.Screen> */}
       </Stack.Navigator>

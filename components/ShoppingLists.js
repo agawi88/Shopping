@@ -5,7 +5,7 @@ import {
     TouchableOpacity, View
 } from "react-native";
 import { useEffect, useState } from "react";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, onSnapshot } from "firebase/firestore";
 
 const ShoppingLists = ({ db }) => {
 
@@ -15,7 +15,7 @@ const ShoppingLists = ({ db }) => {
     const [item2, setItem2] = useState("");
 
 
-  const fetchShoppingLists = async () => {
+ /*  const fetchShoppingLists = async () => {
     const listsDocuments = await getDocs(collection(db, "shoppinglists"));
     let newLists = [];
     listsDocuments.forEach(docObject => {
@@ -24,7 +24,8 @@ const ShoppingLists = ({ db }) => {
       setLists(newLists)
       console.log(123);
   }
-
+ */
+    
     const addShoppingList = async (newList) => {
         const newListRef = await addDoc(collection(db, "shoppinglists"), newList);
         if (newListRef.id) {
@@ -34,8 +35,23 @@ const ShoppingLists = ({ db }) => {
         }
     }
     useEffect(() => {
-    fetchShoppingLists();    
-    }, [JSON.stringify(lists)]);
+//code to executed when cmpnnt mounted/updated
+        const unsubShoppinglists = onSnapshot(collection(db, "shoppinglists"), (documentsSnapshot) => {
+            let newLists = [];
+            documentsSnapshot.forEach(doc => {
+                newLists.push({
+                    id: doc.id, ...doc.data()
+                })
+            });
+            setLists(newLists);
+        });
+//   Clean up code
+        return () => {
+            if (unsubShoppinglists) unsubShoppinglists();
+        }
+    }, []);
+
+
     return (
     <View style={styles.container}>
         <FlatList
