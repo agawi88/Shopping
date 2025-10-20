@@ -33,7 +33,7 @@ let auth;
 
 if (Platform.OS === "web") {
   auth = initializeAuth(app, {
-    persistance: browserLocalPersistence,
+    persistence: browserLocalPersistence,
   });
 }
 else {

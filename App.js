@@ -16,9 +16,11 @@ import { LogBox, Alert } from "react-native";
 const Stack = createNativeStackNavigator();
 
 //state that represents network connectivity
-const connectionStatus = useNetInfo();
 
 const App = () => {
+
+const connectionStatus = useNetInfo();
+
   useEffect(() => {
     if (connectionStatus.isConnected === false) {
       Alert.alert("Connection lost!");
@@ -34,7 +36,7 @@ const App = () => {
         initialRouteName="Welcome"
       >
         <Stack.Screen name="Welcome" component={Welcome}>
-       //   {(props) => <Welcome auth={auth} {...props} />}
+         {/* {(props) => <Welcome auth={auth} {...props} />} */}
         </Stack.Screen>
         <Stack.Screen name="ShoppingLists" component={ShoppingLists}>
 {/*           {(props) => (
