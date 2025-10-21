@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 // import the screens
 import ShoppingLists from "./components/ShoppingLists";
 import Welcome from "./components/Welcome";
-import { db } from "./firebaseConfig";
+import { app, db } from "./firebaseConfig";
 
 // code for detecting whether a user is online (should be kept in main/root comp.)
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -13,10 +13,11 @@ import { useEffect } from "react";
 import { LogBox, Alert } from "react-native";
 import { enableNetwork, disableNetwork } from "firebase/firestore";
 // Ignore deprecation warnings
-LogBox.ignoreLogs([
+/* LogBox.ignoreLogs([
   'props.pointerEvents is deprecated',
   '"shadow*" style props are deprecated',
-]);
+]); */
+LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
 // Create the navigator
 
 const Stack = createNativeStackNavigator();
@@ -44,12 +45,12 @@ const connectionStatus = useNetInfo();
         <Stack.Screen name="Welcome" component={Welcome}>
          {/* {(props) => <Welcome auth={auth} {...props} />} */}
         </Stack.Screen>
-        <Stack.Screen name="ShoppingLists" component={ShoppingLists}>
-{/*           {(props) => (
+        <Stack.Screen name="ShoppingLists">
+        {(props) => (
             <ShoppingLists
               isConnected={connectionStatus.isConnected}
               db={db}
-              {...props} />)} */}
+              {...props} />)} 
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

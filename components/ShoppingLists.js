@@ -9,7 +9,7 @@ import { collection, addDoc, onSnapshot, query, where } from "firebase/firestore
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { db, isConnected } from "../firebaseConfig";
 
-const ShoppingLists = ({ route }) => {
+const ShoppingLists = ({ db, route, isConnected }) => {
 
     const [lists, setLists] = useState([]);
     const [listName, setListName] = useState("");
@@ -58,6 +58,12 @@ const ShoppingLists = ({ route }) => {
         }
     }, [isConnected]);
 
+
+  const loadCachedLists = async () => {
+    const cachedLists = await AsyncStorage.getItem("shopping_lists") || [];
+    setLists(JSON.parse(cachedLists));
+  }    
+    
   const cacheShoppingLists = async (listsToCache) => {
       try {
             await AsyncStorage.setItem('shopping_lists', JSON.stringify(listsToCache));
@@ -72,11 +78,6 @@ const ShoppingLists = ({ route }) => {
         } else {
             Alert.alert("Unable to add. Please try again later.");
         }
-  }
-
-  const loadCachedLists = async () => {
-    const cachedLists = await AsyncStorage.getItem("shopping_lists") || [];
-    setLists(JSON.parse(cachedLists));
   }
   
     return (
