@@ -1,3 +1,12 @@
+/**
+ * @file Welcome.js
+ * @description
+ * Welcome screen of the Shopping App.
+ *
+ * Allows users to sign in anonymously and navigates to the
+ * shopping lists screen upon successful authentication.
+ */
+
 import {
   StyleSheet, View, Text,
   TouchableOpacity,
@@ -6,8 +15,24 @@ import {
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 
-const Welcome = ({ navigation }) => {
+/**
+ * Welcome screen component.
+ *
+ * Handles anonymous authentication and initial navigation
+ * into the application.
+ *
+ * @param {Object} props Component props
+ * @param {Object} props.navigation React Navigation navigation object
+ * @returns {JSX.Element} Welcome screen UI
+ */
 
+const Welcome = ({ navigation }) => {
+  /**
+   * Signs the user in anonymously using Firebase Authentication.
+   * On success, navigates to the ShoppingLists screen.
+   *
+   * @returns {void}
+   */
     const signInUser = () => {
         signInAnonymously(auth)
             .then(result => {

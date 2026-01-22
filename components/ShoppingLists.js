@@ -1,3 +1,12 @@
+/**
+ * @file ShoppingLists.js
+ * @description
+ * Displays and manages shopping lists for the authenticated user.
+ *
+ * Shopping lists are stored in Firebase Firestore and cached locally
+ * using AsyncStorage to allow offline access.
+ */
+
 import {
     Alert, FlatList,
     KeyboardAvoidingView, Platform,
@@ -7,7 +16,22 @@ import {
 import { useEffect, useState } from "react";
 import { collection, addDoc, onSnapshot, query, where } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { db, isConnected } from "../firebaseConfig";
+
+/**
+ * ShoppingLists screen component.
+ *
+ * - Subscribes to Firestore updates when online
+ * - Loads cached shopping lists when offline
+ * - Allows adding new shopping lists when connected
+ *
+ * @param {Object} props Component props
+ * @param {import('firebase/firestore').Firestore} props.db Firestore database instance
+ * @param {Object} props.route Navigation route object
+ * @param {Object} props.route.params Route parameters
+ * @param {string} props.route.params.userID Authenticated user's ID
+ * @param {boolean} props.isConnected Network connection status
+ * @returns {JSX.Element} Shopping lists screen
+ */
 
 const ShoppingLists = ({ db, route, isConnected }) => {
 
@@ -58,12 +82,24 @@ const ShoppingLists = ({ db, route, isConnected }) => {
         }
     }, [isConnected]);
 
+  /**
+   * Loads shopping lists from local AsyncStorage cache.
+   *
+   * @returns {Promise<void>}
+   */
 
   const loadCachedLists = async () => {
     const cachedLists = await AsyncStorage.getItem("shopping_lists") || [];
     setLists(JSON.parse(cachedLists));
   }    
-    
+
+  /**
+   * Saves shopping lists to local AsyncStorage cache.
+   *
+   * @param {Array<Object>} listsToCache Lists to cache
+   * @returns {Promise<void>}
+   */  
+
   const cacheShoppingLists = async (listsToCache) => {
       try {
             await AsyncStorage.setItem('shopping_lists', JSON.stringify(listsToCache));
@@ -71,6 +107,17 @@ const ShoppingLists = ({ db, route, isConnected }) => {
             console.log(error.message);
           }
 }
+
+  /**
+   * Adds a new shopping list to Firestore.
+   *
+   * @param {Object} newList Shopping list data
+   * @param {string} newList.uid User ID
+   * @param {string} newList.name List name
+   * @param {Array<string>} newList.items List items
+   * @returns {Promise<void>}
+   */
+
   const addShoppingList = async (newList) => {
     const newListRef = await addDoc(collection(db, "shoppinglists"), newList);
         if (newListRef.id) {

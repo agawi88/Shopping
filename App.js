@@ -1,3 +1,13 @@
+/**
+ * @file App.js
+ * @description
+ * Root component of the Shopping App.
+ *
+ * Sets up navigation, safe area handling, and network connectivity
+ * monitoring. Enables or disables Firestore network access based
+ * on the device's connection status.
+ */
+
 // import react Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -22,7 +32,15 @@ LogBox.ignoreLogs(["AsyncStorage has been extracted from"]);
 
 const Stack = createNativeStackNavigator();
 
-//state that represents network connectivity
+/**
+ * Root application component.
+ *
+ * - Initializes navigation
+ * - Detects network connectivity changes
+ * - Enables or disables Firestore network access accordingly
+ *
+ * @returns {JSX.Element} The rendered application container
+ */
 
 const App = () => {
 
